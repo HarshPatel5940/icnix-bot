@@ -1,0 +1,41 @@
+{
+  "name": "icnix-bot",
+  "version": "0.1.0",
+  "description": "",
+  "author": "harhspatel5940",
+  "keywords": [],
+  "main": "build/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=production node build/index.js",
+    "build": "esbuild src/**/*.ts src/*.ts --outdir=build --platform=node --format=cjs",
+    "dev": "tsc-watch --onSuccess \"node build/index.js\"",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write src/*.ts src/**/*.ts",
+    "format:check": "prettier --check src/*.ts src/**/*.ts"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "glob": "^10.3.10",
+    "mongodb": "^6.3.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.4",
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
+    "esbuild": "^0.20.0",
+    "eslint": "^8.43.0",
+    "pre-commit": "^1.2.2",
+    "prettier": "^3.1.1",
+    "tsc-watch": "^6.0.4",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.*"
+  },
+  "pre-commit": [
+    "format"
+  ]
+}
