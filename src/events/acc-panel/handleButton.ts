@@ -58,7 +58,7 @@ export default {
       await interaction.deferReply({ ephemeral: true });
       const platform = interaction.customId.split("-")[2];
       try {
-        await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
+        const data = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
           { userId: Number(interaction.user.id) },
           {
             $set: {
@@ -72,6 +72,17 @@ export default {
         await interaction.editReply({
           content: `Votre plate-forme apex a été définie sur ${platform}`,
         });
+        if (!data?.apexName) {
+          await interaction.followUp({
+            content: "Enregistrez également votre nom d'utilisateur Apex",
+            ephemeral: true,
+          });
+        } else {
+          await interaction.followUp({
+            content: "Votre pseudo et votre plate-forme ont été enregistrés avec succès!",
+            ephemeral: true,
+          });
+        }
       } catch (e) {
         await interaction.editReply({
           content: "Une erreur s'est produite lors de l'enregistrement de votre plate-forme apex",

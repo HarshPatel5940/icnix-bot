@@ -15,7 +15,7 @@ export default {
     const name = interaction.fields.getTextInputValue("apex-name");
 
     try {
-      await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
+      const data = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
         { userId: Number(interaction.user.id) },
         {
           $set: {
@@ -29,6 +29,17 @@ export default {
       await interaction.editReply({
         content: `Votre pseudo a été enregistré avec succès! \nSurnom: ${name}`,
       });
+      if (!data?.apexPlatform) {
+        await interaction.followUp({
+          content: "Maintenant, allez-y et enregistrez votre plate-forme Apex",
+          ephemeral: true,
+        });
+      } else {
+        await interaction.followUp({
+          content: "Votre pseudo et votre plate-forme ont été enregistrés avec succès!",
+          ephemeral: true,
+        });
+      }
     } catch (error) {
       console.error(error);
       await interaction.editReply({
