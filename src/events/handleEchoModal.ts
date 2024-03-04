@@ -1,17 +1,4 @@
-import {
-  ChannelType,
-  ColorResolvable,
-  EmbedBuilder,
-  Events,
-  Interaction,
-  ButtonBuilder,
-  ButtonStyle,
-  ActionRowBuilder,
-  Message,
-} from "discord.js";
-import { COLOR, FOOTER_VALUE } from "../config/constant";
-import db from "../utils/database";
-import { TemplateSchemaType } from "../types";
+import { ChannelType, Events, Interaction, ButtonBuilder, ButtonStyle, ActionRowBuilder, Message } from "discord.js";
 
 export default {
   name: Events.InteractionCreate,
@@ -20,15 +7,13 @@ export default {
   async execute(interaction: Interaction) {
     if (!interaction.guild) return;
     if (!interaction.isModalSubmit()) return;
+    if (!interaction.customId.startsWith("echo-")) return;
     const [action, channelId, mention] = interaction.customId.split("-");
-    let message: Message;
-
     if (!action || !channelId) return;
-
+    let message: Message;
     const channel = interaction.guild.channels.cache.get(channelId);
 
     if (!channel) {
-      await interaction.reply({ content: "Target Channel Not Found", ephemeral: true });
       return;
     }
 
@@ -44,25 +29,23 @@ export default {
       return new ActionRowBuilder<ButtonBuilder>().addComponents(delete_message);
     };
 
-    if (action === "echo") {
-      const title = interaction.fields.getTextInputValue("title");
-      const description = interaction.fields.getTextInputValue("description");
-      if (mention !== "none") {
-        message = await channel.send({ content: `📢 Announcement ${mention}\n# ${title}\n${description}` });
-        await interaction.reply({
-          content: `Message sent to <#${channel.id}>`,
-          components: [createComponent(message.id)],
-          ephemeral: true,
-        });
-        return;
-      }
-
-      message = await channel.send({ content: `# ${title}\n${description}` });
+    const title = interaction.fields.getTextInputValue("title");
+    const description = interaction.fields.getTextInputValue("description");
+    if (mention !== "none") {
+      message = await channel.send({ content: `📢 Announcement ${mention}\n# ${title}\n${description}` });
       await interaction.reply({
         content: `Message sent to <#${channel.id}>`,
         components: [createComponent(message.id)],
         ephemeral: true,
       });
+      return;
     }
+
+    message = await channel.send({ content: `# ${title}\n${description}` });
+    await interaction.reply({
+      content: `Message sent to <#${channel.id}>`,
+      components: [createComponent(message.id)],
+      ephemeral: true,
+    });
   },
 };
