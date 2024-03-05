@@ -7,6 +7,7 @@ export default {
   data: new SlashCommandBuilder()
     .setName("profile")
     .setDescription("Gives your Profile Information")
+    .setDMPermission(false)
     .addUserOption(option =>
       option.setName("user").setDescription("The user's profile you want to see").setRequired(false),
     ) as SlashCommandBuilder,
