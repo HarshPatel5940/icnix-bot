@@ -1,5 +1,5 @@
 import { Events, Interaction } from "discord.js";
-import { DiscordUser } from "../../types";
+import { DiscordUser, DiscordUserSchema } from "../../types";
 import db from "../../utils/database";
 
 export default {
@@ -13,13 +13,13 @@ export default {
     await interaction.deferReply({ ephemeral: true });
 
     const name = interaction.fields.getTextInputValue("apex-name");
-
     try {
       const data = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
         { userId: Number(interaction.user.id) },
         {
           $set: {
             apexName: name,
+            isRegisterationComplete: false,
             updatedAt: new Date(),
           },
         },
@@ -35,6 +35,23 @@ export default {
           ephemeral: true,
         });
       } else {
+        try {
+          await (await db()).collection<DiscordUser>("discord-users").updateOne(
+            { userId: Number(interaction.user.id) },
+            {
+              $set: {
+                isRegisterationComplete: true,
+                updatedAt: new Date(),
+              },
+            },
+          );
+        } catch (error) {
+          console.error(error);
+          await interaction.followUp({
+            content: "Une erreur s'est produite lors de l'enregistrement de votre pseudo. Veuillez réessayer.",
+          });
+          return;
+        }
         await interaction.followUp({
           content: "Votre pseudo et votre plate-forme ont été enregistrés avec succès!",
           ephemeral: true,

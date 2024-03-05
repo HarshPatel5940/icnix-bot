@@ -9,7 +9,7 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
-import { DiscordUser } from "../../types";
+import { DiscordUser, DiscordUserSchema } from "../../types";
 import db from "../../utils/database";
 
 export default {
@@ -64,6 +64,15 @@ export default {
             $set: {
               username: interaction.user.username,
               apexPlatform: platform,
+
+              apexScore: 0,
+              apexPlayed: 0,
+              apexTotalPlayed: 0,
+              apexWin: 0,
+              apexLose: 0,
+              apexKd: 0,
+              apexRank: "unranked",
+
               updatedAt: new Date(),
             },
           },
@@ -78,6 +87,27 @@ export default {
             ephemeral: true,
           });
         } else {
+          try {
+            await (await db()).collection<DiscordUser>("discord-users").updateOne(
+              { userId: Number(interaction.user.id) },
+              {
+                $set: {
+                  isRegisterationComplete: true,
+                  updatedAt: new Date(),
+                },
+              },
+            );
+          } catch (error) {
+            console.error(error);
+            await interaction.followUp({
+              content: "Une erreur s'est produite lors de l'enregistrement de votre pseudo. Veuillez réessayer.",
+            });
+            return;
+          }
+          await interaction.followUp({
+            content: "Votre pseudo et votre plate-forme ont été enregistrés avec succès!",
+            ephemeral: true,
+          });
           await interaction.followUp({
             content: "Votre pseudo et votre plate-forme ont été enregistrés avec succès!",
             ephemeral: true,
