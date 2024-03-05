@@ -9,7 +9,7 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
-import { DiscordUser, DiscordUserSchema } from "../../types";
+import { DiscordUser } from "../../types";
 import db from "../../utils/database";
 
 export default {

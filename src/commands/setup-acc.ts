@@ -5,7 +5,6 @@ import {
   ChannelType,
   EmbedBuilder,
   PermissionFlagsBits,
-  Permissions,
   SlashCommandBuilder,
   SlashCommandChannelOption,
 } from "discord.js";

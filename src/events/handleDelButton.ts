@@ -7,7 +7,7 @@ export default {
   async execute(interaction: Interaction) {
     if (!interaction.isButton()) return;
     if (!interaction.guild) return;
-    const [button, channelId, messageId, action] = interaction.customId.split("-");
+    const [button, channelId, messageId] = interaction.customId.split("-");
 
     if (button !== "delete") return;
 

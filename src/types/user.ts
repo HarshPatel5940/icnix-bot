@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { optional, z } from "zod";
+import { z } from "zod";
 
 export const DiscordUserSchema = z.object({
   _id: z.instanceof(ObjectId).optional(),
