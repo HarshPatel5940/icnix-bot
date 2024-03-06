@@ -2,6 +2,7 @@ import { ChannelType, Colors, EmbedBuilder, Events, Interaction } from "discord.
 import db from "../../utils/database";
 import { Match } from "../../types/match";
 import { DiscordUser } from "../../types";
+import { seasonStartRanksArray } from "../../utils/ranks";
 
 export default {
   name: Events.InteractionCreate,
@@ -12,7 +13,7 @@ export default {
     if (!interaction.isStringSelectMenu()) return;
     if (!interaction.customId.startsWith("match-w-")) return;
     await interaction.deferReply({ ephemeral: false });
-    let matchWinner, match;
+    let matchWinner, match, winnerDetails, looserDetails;
     const matchId = interaction.customId.split("-")[2];
 
     const innteractionValues = interaction.values[0]?.split("-+-");
@@ -70,7 +71,14 @@ export default {
       return;
     }
 
-    if (match?.winnerChosenByP1 && match?.winnerChosenByP2) {
+    if (!match?.winnerChosenByP1 || !match?.winnerChosenByP2) {
+      await interaction.editReply({
+        content: `<@${interaction.user.id}> has chosen the winner! Now wait for the opponent to choose the winner for confirmation!`,
+      });
+      return;
+    }
+
+    if (match?.winnerChosenByP1?.trim() && match?.winnerChosenByP2?.trim()) {
       if (match?.winnerChosenByP1 !== match?.winnerChosenByP2) {
         await interaction.editReply({
           content:
@@ -150,7 +158,7 @@ export default {
         return;
       }
     } else {
-      const winnerDetails = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
+      winnerDetails = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
         { userId: match.winner_ID },
         {
           $inc: { apexWin: 1, apexPlayed: 1, apexTotalPlayed: 1 },
@@ -166,8 +174,7 @@ export default {
         return;
       }
 
-      // update looser details
-      const looserDetails = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
+      looserDetails = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
         { userId: match.winner_ID === match.player1_ID ? match.player2_ID : match.player1_ID },
         {
           $inc: { apexPlayed: 1, apexTotalPlayed: 1 },
@@ -187,5 +194,35 @@ export default {
     await interaction.editReply({
       content: "Match Winner Updated in the Database!",
     });
+
+    if (winnerDetails?.apexPlayed === 8) {
+      winnerDetails = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
+        { userId: winnerDetails?.userId },
+        {
+          $set: { apexRank: seasonStartRanksArray[winnerDetails?.apexWin || "0"] },
+        },
+        {
+          returnDocument: "after",
+        },
+      );
+      await interaction.followUp({
+        content: `Congratulations <@${winnerDetails?.userId}>! Your rank has been set to ${winnerDetails?.apexRank}! Use \`/profile\` to check your profile!`,
+      });
+    }
+
+    if (looserDetails?.apexPlayed === 8) {
+      looserDetails = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
+        { userId: looserDetails?.userId },
+        {
+          $set: { apexRank: seasonStartRanksArray[looserDetails?.apexWin || "0"] },
+        },
+        {
+          returnDocument: "after",
+        },
+      );
+      await interaction.followUp({
+        content: `Congratulations <@${looserDetails?.userId}>! Your rank has been set to ${looserDetails?.apexRank}! Use \`/profile\` to check your profile!`,
+      });
+    }
   },
 };
