@@ -107,6 +107,10 @@ export default {
               label: match.player2_name,
               value: `${match.player2_ID}-+-${match.player2_name}`,
             },
+            {
+              label: "Draw",
+              value: "draw",
+            },
           ]);
 
         const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);

@@ -16,6 +16,9 @@ export const MatchSchema = z.object({
   isAcceptedByP1: z.boolean().optional().default(false),
   isAcceptedByP2: z.boolean().optional().default(false),
 
+  winnerChosenByP1: z.string().optional(),
+  winnerChosenByP2: z.string().optional(),
+
   winner_ID: z.string().optional(),
   winner_Name: z.string().optional(),
 

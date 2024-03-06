@@ -17,7 +17,9 @@ export const DiscordUserSchema = z.object({
   apexKd: z.number().optional().default(0),
   apexPlayed: z.number().optional().default(0),
   apexTotalPlayed: z.number().optional().default(0),
+
   apexWin: z.number().optional().default(0),
+  apexDraw: z.number().optional().default(0),
   apexLose: z.number().optional().default(0),
 
   isRegisterationComplete: z.boolean().optional().default(false),
