@@ -15,7 +15,7 @@ export default {
     const name = interaction.fields.getTextInputValue("apex-name");
     try {
       const data = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
-        { userId: Number(interaction.user.id) },
+        { userId: interaction.user.id },
         {
           $set: {
             apexName: name,
@@ -37,7 +37,7 @@ export default {
       } else {
         try {
           await (await db()).collection<DiscordUser>("discord-users").updateOne(
-            { userId: Number(interaction.user.id) },
+            { userId: interaction.user.id },
             {
               $set: {
                 isRegisterationComplete: true,

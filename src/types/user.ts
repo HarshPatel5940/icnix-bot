@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const DiscordUserSchema = z.object({
   _id: z.instanceof(ObjectId).optional(),
-  userId: z.number(),
+  userId: z.string(),
   username: z.string(),
 
   apexName: z.string().max(50),

@@ -59,7 +59,7 @@ export default {
       const platform = interaction.customId.split("-")[2];
       try {
         const data = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
-          { userId: Number(interaction.user.id) },
+          { userId: interaction.user.id },
           {
             $set: {
               username: interaction.user.username,
@@ -89,7 +89,7 @@ export default {
         } else {
           try {
             await (await db()).collection<DiscordUser>("discord-users").updateOne(
-              { userId: Number(interaction.user.id) },
+              { userId: interaction.user.id },
               {
                 $set: {
                   isRegisterationComplete: true,

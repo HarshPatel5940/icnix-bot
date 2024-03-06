@@ -16,7 +16,7 @@ export default {
     if (!interaction.guild) return;
     const user = interaction.options.getUser("user") || interaction.user;
     const userId = user.id;
-    const data = await (await db()).collection<DiscordUser>("discord-users").findOne({ userId: Number(userId) });
+    const data = await (await db()).collection<DiscordUser>("discord-users").findOne({ userId: userId });
     if (!data) {
       await interaction.reply({
         embeds: [

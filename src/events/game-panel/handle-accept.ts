@@ -28,17 +28,16 @@ export default {
     }
 
     if (interaction.user.id !== OpponentID) {
-      if (interaction.user.id !== userID) {
+      if (interaction.user.id === userID) {
         await interaction.editReply({
           content: "You initiated the match, You automatically accept the match!",
         });
-        return;
       } else {
         await interaction.editReply({
           content: "You can't accept the match you initiate or you are not the opponent!",
         });
-        return;
       }
+      return;
     }
 
     const match = await (await db()).collection<Match>("matches").findOneAndUpdate(

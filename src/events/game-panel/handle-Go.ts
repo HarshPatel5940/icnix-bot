@@ -55,7 +55,7 @@ export default {
       content: "Searching for a match...",
     });
 
-    const data = await (await db()).collection<DiscordUser>("discord-users").findOne({ userId: Number(user.id) });
+    const data = await (await db()).collection<DiscordUser>("discord-users").findOne({ userId: user.id });
     if (!data) {
       await interaction.editReply({
         content: "You need to setup your account first",
@@ -70,7 +70,7 @@ export default {
       .collection<DiscordUser>("discord-users")
       .find({
         apexRank: myRank,
-        userId: { $ne: Number(user.id) },
+        userId: { $ne: user.id },
       })
       .toArray();
 
