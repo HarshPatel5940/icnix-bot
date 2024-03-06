@@ -91,7 +91,7 @@ export default {
       const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
 
       await tmsg.edit({
-        content: "Match Acceptted! \nCome Back and update the result after the match!",
+        content: `Match Acceptted! - <@${match.player1_ID}> | <@${match.player2_ID}>\nCome Back and update the result after the match!`,
         embeds: tmsg.embeds[0] ? [tmsg.embeds[0]] : [],
         components: [actionRow],
       });

@@ -8,7 +8,6 @@ import {
   EmbedBuilder,
   Events,
   Interaction,
-  StringSelectMenuBuilder,
 } from "discord.js";
 import { DiscordUser } from "../../types";
 import db from "../../utils/database";
@@ -87,7 +86,7 @@ export default {
     const embed = new EmbedBuilder()
       .setTitle("Match Found")
       .setDescription(`You have been matched with someone. Check the details below!\n\n Match ID: \`${matchID}\``)
-      .setColor("Orange")
+      .setColor(Colors.Blurple)
       .addFields(
         {
           name: "Opponent 1",
