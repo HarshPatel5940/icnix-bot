@@ -1,4 +1,12 @@
-import { ActionRowBuilder, ChannelType, Events, Interaction, StringSelectMenuBuilder } from "discord.js";
+import {
+  ActionRowBuilder,
+  ChannelType,
+  Colors,
+  EmbedBuilder,
+  Events,
+  Interaction,
+  StringSelectMenuBuilder,
+} from "discord.js";
 import db from "../../utils/database";
 import { Match } from "../../types/match";
 
@@ -80,19 +88,27 @@ export default {
         .addOptions([
           {
             label: match.player1_name,
-            value: `${match.player1_ID}`,
+            value: `${match.player1_ID}-+-${match.player1_name}`,
           },
           {
             label: match.player2_name,
-            value: `${match.player2_ID}`,
+            value: `${match.player2_ID}-+-${match.player2_name}`,
           },
         ]);
 
       const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
+      const embed = tmsg.embeds[0];
+
+      const newEmbed = new EmbedBuilder()
+        .setTitle("Match Appected")
+        .setDescription(`Match has been Accepted by <@${interaction.user.id}>\n` + embed?.description)
+        .addFields(embed?.fields || [])
+        .setColor(Colors.Green)
+        .setTimestamp();
 
       await tmsg.edit({
         content: `Match Acceptted! - <@${match.player1_ID}> | <@${match.player2_ID}>\nCome Back and update the result after the match!`,
-        embeds: tmsg.embeds[0] ? [tmsg.embeds[0]] : [],
+        embeds: tmsg.embeds[0] ? [newEmbed] : [],
         components: [actionRow],
       });
     }
