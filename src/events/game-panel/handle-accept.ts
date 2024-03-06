@@ -27,6 +27,7 @@ export default {
     const userID = interaction.customId.split("-")[2];
     const OpponentID = interaction.customId.split("-")[3];
     const matchID = interaction.customId.split("-")[4];
+    let match;
 
     if (!userID || !OpponentID || !matchID) {
       await interaction.editReply({
@@ -35,86 +36,103 @@ export default {
       return;
     }
 
-    if (interaction.user.id !== OpponentID) {
-      if (interaction.user.id === userID) {
+    if (interaction.user.id !== OpponentID && interaction.user.id !== userID) {
+      await interaction.editReply({
+        content: "You can't accept the match you initiate or you are not the opponent!",
+      });
+
+      return;
+    }
+
+    if (interaction.user.id === OpponentID) {
+      match = await (await db()).collection<Match>("matches").findOneAndUpdate(
+        { matchId: matchID },
+        {
+          $set: {
+            isAcceptedByP2: true,
+            updatedAt: new Date(),
+          },
+        },
+        {
+          upsert: false,
+          returnDocument: "after",
+        },
+      );
+    } else {
+      match = await (await db()).collection<Match>("matches").findOneAndUpdate(
+        { matchId: matchID },
+        {
+          $set: {
+            isAcceptedByP1: true,
+            updatedAt: new Date(),
+          },
+        },
+        {
+          upsert: false,
+          returnDocument: "after",
+        },
+      );
+    }
+
+    if (match?.isAcceptedByP1 && match?.isAcceptedByP2) {
+      if (!match) {
         await interaction.editReply({
-          content: "You initiated the match, You automatically accept the match!",
+          content: "Match Not Found in the Database! Contact the Developer!",
         });
-      } else {
+        return;
+      }
+      const tchannel = interaction.guild.channels.cache.get(match.matchMsgChannel);
+      if (!tchannel || tchannel.type !== ChannelType.GuildText) {
         await interaction.editReply({
-          content: "You can't accept the match you initiate or you are not the opponent!",
+          content: "Match Not Found in the Database! Did the channel get deleted? Contact the Developer!",
+        });
+        return;
+      }
+      const tmsg = await tchannel.messages.fetch(match.matchMsgId);
+      if (!tmsg) {
+        await interaction.editReply({
+          content: "Match Not Found in the Database! Did the message get deleted? Contact the Developer!",
+        });
+        return;
+      } else {
+        const selectMenu = new StringSelectMenuBuilder()
+          .setCustomId(`match-w-${matchID}`)
+          .setPlaceholder("Choose the Winner by his name!")
+          .addOptions([
+            {
+              label: match.player1_name,
+              value: `${match.player1_ID}-+-${match.player1_name}`,
+            },
+            {
+              label: match.player2_name,
+              value: `${match.player2_ID}-+-${match.player2_name}`,
+            },
+          ]);
+
+        const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
+        const embed = tmsg.embeds[0];
+
+        const newEmbed = new EmbedBuilder()
+          .setTitle("Match Appected")
+          .setDescription(`Match has been Accepted by <@${interaction.user.id}>\n` + embed?.description)
+          .addFields(embed?.fields || [])
+          .setColor(Colors.Green)
+          .setTimestamp();
+
+        await tmsg.edit({
+          content: `Match Acceptted! - <@${match.player1_ID}> | <@${match.player2_ID}>\nCome Back and update the result after the match!`,
+          embeds: tmsg.embeds[0] ? [newEmbed] : [],
+          components: [actionRow],
         });
       }
-      return;
-    }
 
-    const match = await (await db()).collection<Match>("matches").findOneAndUpdate(
-      { matchId: matchID },
-      {
-        $set: {
-          isAccepted: true,
-          updatedAt: new Date(),
-        },
-      },
-      {
-        upsert: false,
-        returnDocument: "after",
-      },
-    );
-
-    if (!match) {
       await interaction.editReply({
-        content: "Match Not Found in the Database! Contact the Developer!",
+        content: "Match Accepted! Come Back and update the result after the match!",
       });
-      return;
-    }
-    const tchannel = interaction.guild.channels.cache.get(match.matchMsgChannel);
-    if (!tchannel || tchannel.type !== ChannelType.GuildText) {
-      await interaction.editReply({
-        content: "Match Not Found in the Database! Did the channel get deleted? Contact the Developer!",
-      });
-      return;
-    }
-    const tmsg = await tchannel.messages.fetch(match.matchMsgId);
-    if (!tmsg) {
-      await interaction.editReply({
-        content: "Match Not Found in the Database! Did the message get deleted? Contact the Developer!",
-      });
-      return;
     } else {
-      const selectMenu = new StringSelectMenuBuilder()
-        .setCustomId(`match-w-${matchID}`)
-        .setPlaceholder("Choose the Winner by his name!")
-        .addOptions([
-          {
-            label: match.player1_name,
-            value: `${match.player1_ID}-+-${match.player1_name}`,
-          },
-          {
-            label: match.player2_name,
-            value: `${match.player2_ID}-+-${match.player2_name}`,
-          },
-        ]);
-
-      const actionRow = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
-      const embed = tmsg.embeds[0];
-
-      const newEmbed = new EmbedBuilder()
-        .setTitle("Match Appected")
-        .setDescription(`Match has been Accepted by <@${interaction.user.id}>\n` + embed?.description)
-        .addFields(embed?.fields || [])
-        .setColor(Colors.Green)
-        .setTimestamp();
-
-      await tmsg.edit({
-        content: `Match Acceptted! - <@${match.player1_ID}> | <@${match.player2_ID}>\nCome Back and update the result after the match!`,
-        embeds: tmsg.embeds[0] ? [newEmbed] : [],
-        components: [actionRow],
+      await interaction.editReply({
+        content: "You Accepted the Match! Waiting for the opponent to accept the match!",
       });
     }
-
-    await interaction.editReply({
-      content: "Match Accepted! Come Back and update the result after the match!",
-    });
   },
 };

@@ -1,4 +1,3 @@
-import { match } from "assert";
 import { ObjectId } from "mongodb";
 import { z } from "zod";
 
@@ -13,12 +12,15 @@ export const MatchSchema = z.object({
   player1_name: z.string(),
   player2_ID: z.string(),
   player2_name: z.string(),
+
+  isAcceptedByP1: z.boolean().optional().default(false),
+  isAcceptedByP2: z.boolean().optional().default(false),
+
   winner_ID: z.string().optional(),
   winner_Name: z.string().optional(),
 
   isDraw: z.boolean().optional().default(false),
   isCompleted: z.boolean().optional().default(false),
-  isAccepted: z.boolean().optional().default(false),
 
   playedAt: z.date().optional(),
   updatedAt: z
