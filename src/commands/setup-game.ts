@@ -23,11 +23,20 @@ export default {
         .setRequired(true)
         .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement);
     })
+    .addChannelOption((option: SlashCommandChannelOption) => {
+      return option
+        .setName("log-channel")
+        .setDescription("Sélectionnez un canal dans lequel les gens acceptent les défis")
+        .setRequired(true)
+        .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement);
+    })
     .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
   async execute(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) return;
     const channelId = (interaction.options.getChannel("channel")?.id || interaction.channelId) as string;
+    const logChannelId = (interaction.options.getChannel("log-channel")?.id || interaction.channelId) as string;
     const channel = interaction.guild.channels.cache.get(channelId);
     if (channel?.type !== ChannelType.GuildText) {
       await interaction.reply({
@@ -46,7 +55,7 @@ export default {
       });
 
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder().setCustomId("go").setLabel("Go").setStyle(ButtonStyle.Primary),
+      new ButtonBuilder().setCustomId(`apex-go-${logChannelId}`).setLabel("Go").setStyle(ButtonStyle.Primary),
     );
 
     await channel.send({ embeds: [embed], components: [actionRow] });
