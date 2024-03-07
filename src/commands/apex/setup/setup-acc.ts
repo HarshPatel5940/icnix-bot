@@ -4,29 +4,21 @@ import {
   ButtonStyle,
   ChannelType,
   ChatInputCommandInteraction,
-  Colors,
   EmbedBuilder,
   PermissionFlagsBits,
   SlashCommandBuilder,
   SlashCommandChannelOption,
 } from "discord.js";
-import { Command } from "../interface";
+import { Command } from "../../../interface";
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("setup-game-panel")
-    .setDescription("This will setup the 1v1 game panel")
+    .setName("setup-account-panel")
+    .setDescription("This will setup the embeds")
     .addChannelOption((option: SlashCommandChannelOption) => {
       return option
         .setName("channel")
-        .setDescription("Sélectionnez un canal dans lequel configurer le panneau de jeu 1v1.")
-        .setRequired(true)
-        .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement);
-    })
-    .addChannelOption((option: SlashCommandChannelOption) => {
-      return option
-        .setName("log-channel")
-        .setDescription("Sélectionnez un canal dans lequel les gens acceptent les défis")
+        .setDescription("Sélectionnez un canal dans lequel configurer le panneau du compte.")
         .setRequired(true)
         .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement);
     })
@@ -35,8 +27,8 @@ export default {
 
   async execute(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) return;
+    await interaction.deferReply({ ephemeral: false });
     const channelId = (interaction.options.getChannel("channel")?.id || interaction.channelId) as string;
-    const logChannelId = (interaction.options.getChannel("log-channel")?.id || interaction.channelId) as string;
     const channel = interaction.guild.channels.cache.get(channelId);
     if (channel?.type !== ChannelType.GuildText) {
       await interaction.reply({
@@ -47,18 +39,19 @@ export default {
     }
 
     const embed = new EmbedBuilder()
-      .setTitle("Panneau de jeu 1v1")
-      .setDescription("Bienvenue \n dans le monde impitoyable du 1v1. \n Appuyer sur Go pour rechercher un match")
-      .setColor(Colors.Blurple)
-      .setFooter({
-        text: "1v1 Game Panel",
-      });
+      .setTitle("Configuration du compte")
+      .setDescription("Commençons par enregistrer ton pseudo Apex et ta plateforme.")
+      .setColor("Green")
+      .setTimestamp();
 
-    const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder().setCustomId(`apex-go-${logChannelId}`).setLabel("Go").setStyle(ButtonStyle.Primary),
-    );
+    const Buttons = [
+      new ButtonBuilder().setCustomId("apex-nick").setStyle(ButtonStyle.Secondary).setLabel("Add Psd"),
+      new ButtonBuilder().setCustomId("apex-platform").setStyle(ButtonStyle.Secondary).setLabel("Add Platforme"),
+    ];
 
+    const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(Buttons);
     await channel.send({ embeds: [embed], components: [actionRow] });
-    await interaction.reply({ content: "La configuration du panneau de jeu 1v1 est terminée" });
+
+    await interaction.editReply({ content: "La configuration du panneau de compte est terminée" });
   },
 } as Command;
