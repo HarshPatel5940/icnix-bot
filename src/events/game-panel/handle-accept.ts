@@ -118,7 +118,7 @@ export default {
 
         const newEmbed = new EmbedBuilder()
           .setTitle("Match Appected")
-          .setDescription(`Match has been Accepted by <@${interaction.user.id}>\n` + embed?.description)
+          .setDescription(`update: Match has been Accepted by <@${interaction.user.id}>\n` + embed?.description)
           .addFields(embed?.fields || [])
           .setColor(Colors.Green)
           .setTimestamp();
@@ -133,6 +133,15 @@ export default {
       await interaction.editReply({
         content: "Match Accepted! Come Back and update the result after the match!",
       });
+
+      await (await db()).collection<Match>("matches").findOneAndUpdate(
+        { matchId: matchID },
+        {
+          $set: {
+            playedAt: new Date(),
+          },
+        },
+      );
     } else {
       await interaction.editReply({
         content: "You Accepted the Match! Waiting for the opponent to accept the match!",
