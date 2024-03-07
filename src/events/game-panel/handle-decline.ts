@@ -48,7 +48,7 @@ export default {
 
     if (!match?._id) {
       await interaction.editReply({
-        content: "Match Not Found in the Database! Contact the Developer!",
+        content: "Correspondance introuvable dans la base de données!",
       });
       return;
     }
@@ -56,20 +56,20 @@ export default {
     const tchannel = interaction.guild.channels.cache.get(tChannelId);
     if (!tchannel?.id) {
       await interaction.editReply({
-        content: "Log Channel Not Found!",
+        content: "Canal de journal introuvable !",
       });
       return;
     }
     if (tchannel.type !== ChannelType.GuildText) {
       await interaction.editReply({
-        content: "Invalid Channel Type!",
+        content: "Type de canal non valide !",
       });
       return;
     }
     const tmsg = await tchannel.messages.fetch(`${match.matchMsgId}`);
     if (!tmsg.id) {
       await interaction.editReply({
-        content: "Not able to fetch the message!",
+        content: "Impossible de récupérer le message !",
       });
       return;
     }

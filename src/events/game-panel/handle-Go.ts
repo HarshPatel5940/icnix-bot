@@ -31,33 +31,33 @@ export default {
 
     if (!channelId) {
       await interaction.editReply({
-        content: "Log Channel ID Not Found! Please Setup Game Panel Again!",
+        content: "ID de canal de journal introuvable! Veuillez configurer à nouveau le panneau de jeu!",
       });
       return;
     }
     const channel = interaction.guild.channels.cache.get(channelId);
     if (!channel) {
       await interaction.editReply({
-        content: "Log Channel Not Found! Please Setup Game Panel Again!",
+        content: "Canal de journal introuvable! Veuillez configurer à nouveau le panneau de jeu!",
       });
       return;
     }
 
     if (channel.type !== ChannelType.GuildText) {
       await interaction.editReply({
-        content: "This command can only be used in a text channel.",
+        content: "Cette commande ne peut être utilisée que dans un canal texte.",
       });
       return;
     }
 
     await interaction.editReply({
-      content: "Searching for a match...",
+      content: "À la recherche d'une correspondance...",
     });
 
     const data = await (await db()).collection<DiscordUser>("discord-users").findOne({ userId: user.id });
     if (!data) {
       await interaction.editReply({
-        content: "You need to setup your account first",
+        content: "Vous devez d'abord configurer votre compte",
       });
       return;
     }
@@ -76,7 +76,7 @@ export default {
     const opponent: DiscordUser | undefined = matches[Math.floor(Math.random() * matches.length)];
     if (!opponent) {
       await interaction.editReply({
-        content: "No match found in your rank!",
+        content: "Aucune correspondance n'a été trouvée dans votre rang!",
       });
       return;
     }
@@ -85,7 +85,9 @@ export default {
 
     const embed = new EmbedBuilder()
       .setTitle("Match Found")
-      .setDescription(`You have been matched with someone. Check the details below!\n\n Match ID: \`${matchID}\``)
+      .setDescription(
+        `Vous avez été jumelé avec quelqu'un. Vérifiez les détails ci-dessous !\n\n ID de match : \`${matchID}\``,
+      )
       .setColor(Colors.Blurple)
       .addFields(
         {
@@ -113,7 +115,7 @@ export default {
     );
 
     const tmsg = await channel.send({
-      content: `Match Found! Check the details below! - <@${user.id}> | <@${opponent.userId}>`,
+      content: `Match trouvé! Consultez les détails ci-dessous! - <@${user.id}> | <@${opponent.userId}>`,
       embeds: [embed],
       components: [actionRow],
     });
@@ -138,7 +140,7 @@ export default {
     );
 
     await interaction.editReply({
-      content: `Match Found! Check the details by [**clicking here** 🔗](${tmsg.url}) - <#${tmsg.channel.id}>`,
+      content: `Match trouvé! Vérifiez les détails par [**cliquez ici** 🔗 ](${tmsg.url}) - <#${tmsg.channel.id}>`,
     });
   },
 };

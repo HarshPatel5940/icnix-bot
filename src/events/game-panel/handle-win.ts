@@ -3,7 +3,6 @@ import db from "../../utils/database";
 import { Match } from "../../types/match";
 import { DiscordUser } from "../../types";
 import { seasonRanksArray, seasonStartRanksArray } from "../../utils/ranks";
-import { BlobOptions } from "buffer";
 
 export default {
   name: Events.InteractionCreate,
@@ -23,14 +22,14 @@ export default {
 
     if (!matchWinner || !matchId || !match) {
       await interaction.editReply({
-        content: "Not Able to fetch the winner. Something went wrong!",
+        content: "Impossible d'aller chercher le gagnant. Quelque chose s'est mal passé !",
       });
       return;
     }
 
     if (match.isCompleted) {
       await interaction.editReply({
-        content: "Match has already been completed!",
+        content: "Le match est déjà terminé!",
       });
       return;
     }
@@ -67,14 +66,14 @@ export default {
       );
     } else {
       await interaction.editReply({
-        content: "You are not the player of this match!",
+        content: "Vous n'êtes pas le joueur de ce match !",
       });
       return;
     }
 
     if (!match?.winnerChosenByP1 || !match?.winnerChosenByP2) {
       await interaction.editReply({
-        content: `<@${interaction.user.id}> has chosen the winner! Now wait for the opponent to choose the winner for confirmation!`,
+        content: `<@${interaction.user.id}> a choisi le gagnant ! Attendez maintenant que l'adversaire choisisse le gagnant pour confirmer !`,
       });
       return;
     }
@@ -83,7 +82,7 @@ export default {
       if (match?.winnerChosenByP1 !== match?.winnerChosenByP2) {
         await interaction.editReply({
           content:
-            "Both players have different winner! Match can't be completed! If needed, Contact Staff for resolving this issue!",
+            "Les deux joueurs ont un gagnant différent! Le match ne peut pas être terminé! Si nécessaire, contactez le personnel pour résoudre ce problème!",
         });
         return;
       }
@@ -107,14 +106,14 @@ export default {
 
     if (!match) {
       await interaction.editReply({
-        content: "Match Not Found in the Database! Contact the Developer!",
+        content: "Correspondance introuvable dans la base de données!",
       });
       return;
     }
     const tchannel = interaction.guild.channels.cache.get(match.matchMsgChannel);
     if (!tchannel || tchannel.type !== ChannelType.GuildText) {
       await interaction.editReply({
-        content: "Match Not Found in the Database! Did the channel get deleted? Contact the Developer!",
+        content: "Correspondance introuvable dans la base de données! La chaîne a-t-elle été supprimée?",
       });
       return;
     }
@@ -139,7 +138,7 @@ export default {
       components: [],
     });
     await interaction.editReply({
-      content: "Match Completed. Updating details...",
+      content: "Match terminé. Mise à jour des détails...",
     });
 
     if (match.winner_ID === "draw") {
@@ -193,7 +192,8 @@ export default {
     }
 
     await interaction.editReply({
-      content: "Match Details Updated in the Database!\nChecking Ranks of the players...",
+      content:
+        "Les détails du match ont été mis à jour dans la base de données !\nVérification des rangs des joueurs...",
     });
 
     if (winnerDetails?.apexRank === "unranked") {
@@ -229,7 +229,7 @@ export default {
       }
 
       await interaction.editReply({
-        content: "Match Details Updated in the Database!",
+        content: "Les détails du match ont été mis à jour dans la base de données !",
       });
     } else {
       if (match.winner_ID === "draw") {
@@ -271,7 +271,7 @@ export default {
         }
 
         await interaction.editReply({
-          content: "Added Points for P1, checking the rank.",
+          content: "Ajout de points pour P1, en vérifiant le rang...",
         });
 
         winnerDetails = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
@@ -293,10 +293,11 @@ export default {
           await interaction.editReply({
             content: "Failed while updating Points",
           });
+          return;
         }
 
         await interaction.editReply({
-          content: "Updated Ranks for Winner, updating points for P2",
+          content: "Mise à jour des rangs pour le vainqueur, mise à jour des points pour la P2",
         });
 
         if (!looserDetails) {
@@ -332,7 +333,7 @@ export default {
         }
 
         await interaction.editReply({
-          content: "Updated Points for P2, Updating Ranks...",
+          content: "Mise à jour des points pour P2, mise à jour des rangs...",
         });
 
         let isDepromoted: boolean = false;
@@ -356,7 +357,7 @@ export default {
         }
 
         await interaction.editReply({
-          content: "Updated Match Details and Player Details",
+          content: "Mise à jour des détails du match et des joueurs",
         });
       }
     }
