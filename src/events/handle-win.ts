@@ -1,8 +1,8 @@
 import { ChannelType, EmbedBuilder, Events, Interaction } from "discord.js";
-import db from "../../utils/database";
-import { Match } from "../../types/match";
-import { DiscordUser } from "../../types";
-import { seasonRanksArray, seasonStartRanksArray } from "../../utils/ranks";
+import db from "../utils/database";
+import { Match } from "../types/match";
+import { DiscordUser } from "../types";
+import { seasonRanksArray, seasonStartRanksArray } from "../utils/ranks";
 
 export default {
   name: Events.InteractionCreate,

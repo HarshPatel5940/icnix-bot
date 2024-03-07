@@ -7,8 +7,8 @@ import {
   Interaction,
   StringSelectMenuBuilder,
 } from "discord.js";
-import db from "../../utils/database";
-import { Match } from "../../types/match";
+import db from "../utils/database";
+import { Match } from "../types/match";
 
 export default {
   name: Events.InteractionCreate,

@@ -1,6 +1,6 @@
 import { ChannelType, Colors, Embed, EmbedBuilder, Events, Interaction } from "discord.js";
-import db from "../../utils/database";
-import { Match } from "../../types/match";
+import db from "../utils/database";
+import { Match } from "../types/match";
 
 export default {
   name: Events.InteractionCreate,

@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, Colors, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { Command } from "../../interface";
-import db from "../../utils/database";
-import { DiscordUser } from "../../types";
+import { Command } from "../interface";
+import db from "../utils/database";
+import { DiscordUser } from "../types";
 
 export default {
   data: new SlashCommandBuilder()

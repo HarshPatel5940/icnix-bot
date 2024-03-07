@@ -9,8 +9,8 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
-import { DiscordUser } from "../../types";
-import db from "../../utils/database";
+import { DiscordUser } from "../types";
+import db from "../utils/database";
 
 export default {
   name: Events.InteractionCreate,

@@ -7,9 +7,9 @@ import {
   EmbedBuilder,
   SlashCommandBuilder,
 } from "discord.js";
-import { Command } from "../../../interface";
-import db from "../../../utils/database";
-import { Match } from "../../../types/match";
+import { Command } from "../interface";
+import db from "../utils/database";
+import { Match } from "../types/match";
 
 export default {
   data: new SlashCommandBuilder()

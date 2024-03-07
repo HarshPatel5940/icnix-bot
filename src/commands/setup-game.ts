@@ -10,7 +10,7 @@ import {
   SlashCommandBuilder,
   SlashCommandChannelOption,
 } from "discord.js";
-import { Command } from "../../../interface";
+import { Command } from "../interface";
 
 export default {
   data: new SlashCommandBuilder()
