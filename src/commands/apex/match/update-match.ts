@@ -34,7 +34,7 @@ export default {
     }
     await interaction.deferReply({ ephemeral: true });
 
-    let data = await (await db()).collection<Match>("matches").findOne({ matchId: matchID });
+    const data = await (await db()).collection<Match>("matches").findOne({ matchId: matchID });
     if (!data) {
       await interaction.editReply({
         content: "Aucune correspondance n'a été trouvée avec l'ID de correspondance fourni",

@@ -13,12 +13,12 @@ export default {
     if (!interaction.isStringSelectMenu()) return;
     if (!interaction.customId.startsWith("match-w-")) return;
     await interaction.deferReply({ ephemeral: false });
-    let matchWinner, match, winnerDetails, looserDetails;
+    let match, winnerDetails, looserDetails;
     const matchId = interaction.customId.split("-")[2];
 
     const innteractionValues = interaction.values[0]?.split("-+-");
     match = await (await db()).collection<Match>("matches").findOne({ matchId });
-    matchWinner = innteractionValues?.length === 2 ? innteractionValues : "draw";
+    const matchWinner = innteractionValues?.length === 2 ? innteractionValues : "draw";
 
     if (!matchWinner || !matchId || !match) {
       await interaction.editReply({
@@ -307,7 +307,7 @@ export default {
           return;
         }
 
-        let pointsRemoved: number = 0;
+        let pointsRemoved = 0;
         if (seasonRanksArray.indexOf(looserDetails.apexRank) < seasonRanksArray.indexOf("Diamant 3")) {
           pointsRemoved = 1;
         } else {
@@ -336,7 +336,7 @@ export default {
           content: "Mise à jour des points pour P2, mise à jour des rangs...",
         });
 
-        let isDepromoted: boolean = false;
+        let isDepromoted = false;
 
         if (looserDetails.apexScore - pointsRemoved <= 0) {
           isDepromoted = true;
