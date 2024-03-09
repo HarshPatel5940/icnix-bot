@@ -1,6 +1,6 @@
 import { ChannelType, EmbedBuilder, Events, Interaction } from "discord.js";
 import db from "../utils/database";
-import { Match } from "../types/match";
+import { Match } from "../types";
 import { DiscordUser } from "../types";
 import { seasonRanksArray, seasonStartRanksArray } from "../utils/ranks";
 

@@ -9,7 +9,7 @@ import {
 } from "discord.js";
 import { Command } from "../interface";
 import db from "../utils/database";
-import { Match } from "../types/match";
+import { Match } from "../types";
 
 export default {
   data: new SlashCommandBuilder()

@@ -11,7 +11,7 @@ import {
 import { DiscordUser } from "../types";
 import db from "../utils/database";
 import crypto from "crypto";
-import { Match } from "../types/match";
+import { Match } from "../types";
 
 export default {
   name: Events.InteractionCreate,
