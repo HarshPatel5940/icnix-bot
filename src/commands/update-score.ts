@@ -18,7 +18,13 @@ export default {
   async execute(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) return;
     const user = interaction.options.getUser("user") || interaction.user;
-    const newScore = interaction.options.getString("score-fixe");
+    const newScore = Number(interaction.options.getString("score-fixe"));
+    if (!newScore || newScore < 0 || newScore > 50) {
+      await interaction.reply({
+        content: "Score invalide. Le score doit être compris entre 0 et 50.",
+      });
+      return;
+    }
 
     const userData = await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
       {
@@ -26,7 +32,7 @@ export default {
       },
       {
         $set: {
-          apexScore: Number(newScore),
+          apexScore: newScore,
         },
       },
       {
