@@ -21,14 +21,14 @@ export default {
     const matchID = interaction.customId.split("-")[4];
     if (!userID || !OpponentID || !matchID) {
       await interaction.editReply({
-        content: "Button ID's are not complete. Something went wrong!",
+        content: "Les ID de bouton ne sont pas complets. Quelque chose s'est mal passé!",
       });
       return;
     }
 
     if (interaction.user.id !== OpponentID && interaction.user.id !== userID) {
       await interaction.editReply({
-        content: "You can't decline the match you didn't initiate or you are not the opponent!",
+        content: "Vous ne pouvez pas refuser le match que vous n'avez pas initié ou vous n'êtes pas l'adversaire!",
       });
       return;
     }
@@ -78,19 +78,21 @@ export default {
 
     const newEmbed = new EmbedBuilder()
       .setTitle("Match Declined")
-      .setDescription(`Match has been declined by <@${interaction.user.id}>\n` + embed?.description)
+      .setDescription(`La correspondance a été refusée de <@${interaction.user.id}>\n` + embed?.description)
       .addFields(embed?.fields || [])
       .setColor(Colors.Red)
       .setTimestamp();
 
     await tmsg.edit({
-      content: "Match Declined! \nYou can search for a new match by clicking the 'go' button again!",
+      content:
+        "Match refusé! \nVous pouvez rechercher une nouvelle correspondance en cliquant à nouveau sur le bouton « Aller » !",
       embeds: tmsg.embeds[0] ? [newEmbed] : [],
       components: [],
     });
 
     await interaction.editReply({
-      content: 'Match Declined! You can search for a new match by clicking the "go" button again!',
+      content:
+        "Match refusé ! Vous pouvez rechercher une nouvelle correspondance en cliquant à nouveau sur le bouton « aller » !",
     });
   },
 };

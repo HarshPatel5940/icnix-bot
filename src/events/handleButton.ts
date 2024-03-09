@@ -108,10 +108,6 @@ export default {
             content: "Votre pseudo et votre plate-forme ont été enregistrés avec succès!",
             ephemeral: true,
           });
-          await interaction.followUp({
-            content: "Votre pseudo et votre plate-forme ont été enregistrés avec succès!",
-            ephemeral: true,
-          });
         }
       } catch (e) {
         await interaction.editReply({
