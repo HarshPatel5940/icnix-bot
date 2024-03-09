@@ -8,7 +8,7 @@ export const DiscordUserSchema = z.object({
 
   apexName: z.string().max(50),
   apexPlatform: z.string().refine(x => {
-    ["pc", "ps5", "ps4", "switch"].includes(x);
+    ["pc", "ps5", "ps4", "switch", "xbox"].includes(x);
   }, "Invalid platform"),
 
   apexScore: z.number().min(0).max(50),

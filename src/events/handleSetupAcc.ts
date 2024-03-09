@@ -41,12 +41,17 @@ export default {
         .setCustomId("apex-p-switch")
         .setLabel("Switch")
         .setStyle(ButtonStyle.Secondary);
+      const xboxButton = new ButtonBuilder()
+        .setCustomId("apex-p-xbox")
+        .setLabel("Xbox")
+        .setStyle(ButtonStyle.Secondary);
 
       const FirstActionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
         pcButton,
         ps5Button,
         ps4Button,
         switchButton,
+        xboxButton,
       );
 
       const platformEmbed = new EmbedBuilder()
