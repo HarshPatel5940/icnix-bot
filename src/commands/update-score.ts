@@ -5,7 +5,7 @@ import { DiscordUser } from "../types";
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("update-nick")
+    .setName("update-score")
     .setDescription("Update your Apex Legends nickname")
     .setDMPermission(false)
     .addUserOption(option =>
