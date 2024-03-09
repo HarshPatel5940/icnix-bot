@@ -2,6 +2,7 @@ import {
   ActionRowBuilder,
   ChannelType,
   ModalBuilder,
+  PermissionFlagsBits,
   SlashCommandBuilder,
   SlashCommandChannelOption,
   TextInputBuilder,
@@ -14,6 +15,7 @@ export default {
     .setName("echo")
     .setDescription("Announce a message to a channel")
     .setDMPermission(false)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .addChannelOption((option: SlashCommandChannelOption) => {
       return option
         .setName("channel")

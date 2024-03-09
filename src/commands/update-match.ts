@@ -5,6 +5,7 @@ import {
   ChatInputCommandInteraction,
   Colors,
   EmbedBuilder,
+  PermissionFlagsBits,
   SlashCommandBuilder,
 } from "discord.js";
 import { Command } from "../interface";
@@ -16,6 +17,7 @@ export default {
     .setName("update-match")
     .setDescription("Mettre à jour les détails d'un match en cours")
     .setDMPermission(false)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
     .addStringOption(option =>
       option
         .setName("match-id")

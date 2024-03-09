@@ -1,4 +1,10 @@
-import { ChatInputCommandInteraction, Colors, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import {
+  ChatInputCommandInteraction,
+  Colors,
+  EmbedBuilder,
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+} from "discord.js";
 import { Command } from "../interface";
 import db from "../utils/database";
 import { DiscordUser } from "../types";
@@ -8,6 +14,7 @@ export default {
     .setName("update-score")
     .setDescription("Update your Apex Legends nickname")
     .setDMPermission(false)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .addUserOption(option =>
       option.setName("user").setDescription("Le profil de l'utilisateur que vous souhaitez voir").setRequired(true),
     )
