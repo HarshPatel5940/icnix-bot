@@ -9,10 +9,10 @@ export default {
     .setDescription("Update your Apex Legends nickname")
     .setDMPermission(false)
     .addUserOption(option =>
-      option.setName("user").setDescription("Le profil de l'utilisateur que vous souhaitez voir").setRequired(false),
+      option.setName("user").setDescription("Le profil de l'utilisateur que vous souhaitez voir").setRequired(true),
     )
     .addStringOption(option =>
-      option.setName("score-fixe").setDescription("Met à jour le score du rang actuel"),
+      option.setName("score-fixe").setDescription("Met à jour le score du rang actuel").setRequired(true),
     ) as SlashCommandBuilder,
 
   async execute(interaction: ChatInputCommandInteraction) {

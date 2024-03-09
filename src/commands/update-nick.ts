@@ -9,10 +9,10 @@ export default {
     .setDescription("Update your Apex Legends nickname")
     .setDMPermission(false)
     .addUserOption(option =>
-      option.setName("user").setDescription("Le profil de l'utilisateur que vous souhaitez voir").setRequired(false),
+      option.setName("user").setDescription("Le profil de l'utilisateur que vous souhaitez voir").setRequired(true),
     )
     .addStringOption(option =>
-      option.setName("nouveau-nick").setDescription("Le pseudo que vous souhaitez mettre à jour"),
+      option.setName("nouveau-nick").setDescription("Le pseudo que vous souhaitez mettre à jour").setRequired(true),
     ) as SlashCommandBuilder,
 
   async execute(interaction: ChatInputCommandInteraction) {
