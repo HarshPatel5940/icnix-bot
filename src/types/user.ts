@@ -6,6 +6,8 @@ export const DiscordUserSchema = z.object({
   userId: z.string(),
   username: z.string(),
 
+  isActive: z.boolean().optional().default(false),
+
   apexName: z.string().max(50),
   apexPlatform: z.string().refine(x => {
     ["pc", "ps5", "ps4", "switch", "xbox"].includes(x);

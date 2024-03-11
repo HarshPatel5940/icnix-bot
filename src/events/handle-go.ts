@@ -60,6 +60,17 @@ export default {
       });
       return;
     }
+
+    await (await db())
+      .collection<DiscordUser>("discord-users")
+      .findOneAndUpdate({ userId: user.id }, { $set: { isActive: !data.isActive } });
+
+    if (data.isActive) {
+      await interaction.editReply({
+        content: "J'ai arrêté de chercher des correspondances",
+      });
+      return;
+    }
     const myRank = data.apexRank;
 
     const matches = await (
@@ -68,6 +79,7 @@ export default {
       .collection<DiscordUser>("discord-users")
       .find({
         apexRank: myRank,
+        isActive: true,
         userId: { $ne: user.id },
       })
       .toArray();
@@ -75,7 +87,7 @@ export default {
     const opponent: DiscordUser | undefined = matches[Math.floor(Math.random() * matches.length)];
     if (!opponent) {
       await interaction.editReply({
-        content: "Aucune correspondance n'a été trouvée dans votre rang!",
+        content: "Aucun adversaire n'est actif. Vous contactera une fois que quelqu'un sera en ligne.",
       });
       return;
     }
