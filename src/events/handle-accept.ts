@@ -8,7 +8,7 @@ import {
   StringSelectMenuBuilder,
 } from "discord.js";
 import db from "../utils/database";
-import { Match } from "../types";
+import { DiscordUser, Match } from "../types";
 
 export default {
   name: Events.InteractionCreate,
@@ -74,13 +74,27 @@ export default {
       );
     }
 
-    if (match?.isAcceptedByP1 && match?.isAcceptedByP2) {
-      if (!match) {
-        await interaction.editReply({
-          content: "Correspondance introuvable dans la base de données!",
-        });
-        return;
-      }
+    if (!match) {
+      await interaction.editReply({
+        content: "Correspondance introuvable dans la base de données!",
+      });
+      return;
+    }
+
+    if (match.isAcceptedByP1 && match.isAcceptedByP2) {
+      await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
+        { $in: [match.player1_ID, match.player2_ID] },
+        {
+          $set: {
+            isActive: false,
+          },
+        },
+        {
+          upsert: false,
+          returnDocument: "after",
+        },
+      );
+
       const tchannel = interaction.guild.channels.cache.get(match.matchMsgChannel);
       if (!tchannel || tchannel.type !== ChannelType.GuildText) {
         await interaction.editReply({
