@@ -83,7 +83,7 @@ export default {
 
     if (match.isAcceptedByP1 && match.isAcceptedByP2) {
       await (await db()).collection<DiscordUser>("discord-users").findOneAndUpdate(
-        { $in: [match.player1_ID, match.player2_ID] },
+        { userId: { $in: [match.player1_ID, match.player2_ID] } },
         {
           $set: {
             isActive: false,
@@ -122,7 +122,7 @@ export default {
               value: `${match.player2_ID}-+-${match.player2_name}`,
             },
             {
-              label: "Draw",
+              label: "Match Nul",
               value: "draw",
             },
           ]);
